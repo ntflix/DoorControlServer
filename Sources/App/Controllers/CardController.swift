@@ -4,6 +4,8 @@ import Vapor
 struct CardController: RouteCollection {
   func boot(routes: RoutesBuilder) throws {
     let cards = routes.grouped("cards")
+
+    cards.get("bySerial", ":cardSerial", use: self.getByCardSerial)
   }
 
   @Sendable
@@ -17,7 +19,7 @@ struct CardController: RouteCollection {
       .filter(\.$serial == cardSerial)
       .join(
         AccessMethodAlias.self,
-        on: \Card.$id == \AccessMethodAlias.model.card!.$id
+        on: \Card.$accessMethod.$id == \AccessMethodAlias.model.$id
       )
       .filter(
         AccessMethodAlias.self,
@@ -26,7 +28,7 @@ struct CardController: RouteCollection {
       // and where User status is active
       .join(
         UserAlias.self,
-        on: \AccessMethodAlias.model.$user.$id == \UserAlias.model.$id
+        on: \UserAlias.model.$id == \AccessMethodAlias.model.$user.$id
       )
       .filter(
         UserAlias.self,
