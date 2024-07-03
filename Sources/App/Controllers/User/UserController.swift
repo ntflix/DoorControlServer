@@ -9,6 +9,9 @@ struct UserController: RouteCollection {
     users.post(use: self.create)
     users.group(":userID") { user in
       user.delete(use: self.delete)
+      user.get("accessMethods", use: self.getAccessMethods)
+      user.post("card", use: self.createCard)
+      user.post("code", use: self.createCode)
     }
   }
 

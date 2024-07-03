@@ -16,7 +16,14 @@ final class Card: Model, @unchecked Sendable {
 
   init() {}
 
-  init(id: UUID? = nil) {
+  init(id: UUID? = nil, serial: String) {
     self.id = id
+    self.serial = serial
+  }
+
+  func toDTO() -> CardDTO {
+    CardDTO(
+      serial: serial
+    )
   }
 }

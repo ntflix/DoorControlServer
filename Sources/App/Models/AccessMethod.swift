@@ -29,12 +29,29 @@ final class AccessMethod: Model, @unchecked Sendable {
   init(
     id: UUID? = nil,
     user: User,
-    card: Card?,
+    card: Card? = nil,
     accessType: AccessStatus
   ) {
     self.id = id
     self.$user.id = user.id!
-    self.card = card
+    if let card = card {
+      self.card = card
+      // do {
+      //   self.card!.id = try card.requireID()
+      // } catch {
+      //   self.card = card
+      // }
+    }
     self.accessStatus = accessType
+  }
+
+  func toDTO() -> AccessMethodDTO {
+    AccessMethodDTO(
+      id: id,
+      createdAt: createdAt,
+      accessCode: accessCode,
+      card: self.card?.toDTO(),
+      accessStatus: accessStatus
+    )
   }
 }
